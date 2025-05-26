@@ -1,0 +1,38 @@
+[build-system]
+    requires      = ["setuptools>=61", "wheel"]
+    build-backend = "setuptools.build_meta"
+
+[project]
+    name = "exercism-scheduler"
+    version = "2025.05.25"
+    description = "Command-line scheduler tool for tracking progress"
+    keywords = ["egg", "bacon", "sausage", "tomatoes", "Lobster Thermidor"]
+    license-files = ["LICEN[CS]E*"]
+    readme = "README.md"
+    authors = [
+        { name = "Prince Muel", email = "68931805+princemuel@users.noreply.github.com" },
+    ]
+    maintainers = [
+        { name = "Prince Muel", email = "68931805+princemuel@users.noreply.github.com" },
+    ]
+    requires-python = ">=3.8"
+    dependencies = ["rich>=14.0", "typer", "platformdirs"]
+    classifiers = [
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+    ]
+
+[tool.setuptools]
+    packages             = ["scheduler"]
+    package-dir          = { "" = "src" }
+    include-package-data = true
+
+    [project.scripts]
+        scheduler = "scheduler.__main__:app"

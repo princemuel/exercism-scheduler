@@ -1282,7 +1282,25 @@ tmp-*
 
 *.pem
 *.ignored.*
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+
+# Database files (if you don't want to commit your actual data)
 *.db
+*.sqlite
+*.sqlite3
+# Keep schema and migrations
+!/src/migrations/
 
 styled-system
 prisma.rs
