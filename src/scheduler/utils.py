@@ -19,7 +19,7 @@ def export_to_json(data, filename):
         json.dump(data, f, indent=2)
 
 
-def current_week_range():
+def get_week_range():
     today = date.today()
     start = today - timedelta(days=today.weekday())  # Monday
     end = start + timedelta(days=6)  # Sunday
