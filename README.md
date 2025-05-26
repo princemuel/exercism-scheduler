@@ -12,3 +12,4 @@
 - [x] Add a database to store tasks and schedules
 - [ ] Add a REST API to interact with the scheduler?
 - [ ] Add a GUI interface to interact with the scheduler?
+- [ ] Resolve the issues with state when carrying over a track or making as completed
