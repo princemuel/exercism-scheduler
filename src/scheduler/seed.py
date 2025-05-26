@@ -20,7 +20,7 @@ def tracks_from_json(json_path=None):
     for track_dict in tracks:
         track = Track(**track_dict)
         cursor.execute(
-            "REPLACE INTO tracks (title, category, total, completed) VALUES (?, ?, ?, ?)",
+            "INSERT OR REPLACE INTO tracks (title, category, total, completed) VALUES (?, ?, ?, ?)",
             (track.title, track.category, track.total, track.completed),
         )
     conn.commit()

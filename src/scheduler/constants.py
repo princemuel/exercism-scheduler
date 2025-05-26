@@ -9,9 +9,9 @@ DATA_DIR = Path(user_data_dir("scheduler", "princemuel"))
 # Constants for the Database
 # /////////////////////////////////////////////
 # Database file and directory
-DATABASE_FILE = "scheduler.sqlite"
+DATABASE_FILE = "scheduler.db"
 DATABASE_PATH = DATA_DIR / DATABASE_FILE
-SCHEMA_PATH = Path(__file__).parent.parent / "migrations" / "schema.sql"
+SCHEMA_PATH = Path(__file__).parent / "migrations" / "schema.sql"
 DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 
 # /////////////////////////////////////////////
