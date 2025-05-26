@@ -1,9 +1,14 @@
+import os
 from decimal import Decimal, getcontext
 from pathlib import Path
 
-from platformdirs import user_data_dir
+from platformdirs import user_documents_dir
 
-DATA_DIR = Path(user_data_dir("scheduler", "princemuel"))
+# /////////////////////////////////////////////
+if os.getenv("MODE", "").lower() == "development":
+    DATA_DIR = Path.cwd() / "src" / "database"
+else:
+    DATA_DIR = Path(user_documents_dir()) / "scheduler"
 
 # /////////////////////////////////////////////
 # Constants for the Database
@@ -39,4 +44,5 @@ RANDOM_SEED_MOD = 2**256 - 2**32 - 977  # Modulo for daily seed generation
 
 
 # Set decimal precision
+getcontext().prec = FLOAT_PRECISION
 getcontext().prec = FLOAT_PRECISION
