@@ -1,8 +1,8 @@
 import typer
 from rich.console import Console
 
-from scheduler import db
-from scheduler.constants import DATA_DIR, DATABASE_PATH
+from src import db
+from src.constants import DATA_DIR, DATABASE_PATH
 
 console = Console()
 

@@ -1,6 +1,6 @@
 import hashlib
 
-from scheduler.constants import RANDOM_SEED_MOD
+from src.constants import RANDOM_SEED_MOD
 
 
 def deterministic_k(date_str: str, track: str) -> int:
@@ -9,7 +9,7 @@ def deterministic_k(date_str: str, track: str) -> int:
     Uses HMAC-SHA256 for deterministic randomness based on date and track.
     """
     # Create message from date and track
-    message = f"{date_str}:{track}".encode("utf-8")
+    message = f"{date_str}:{track}".encode()
 
     # Use a fixed key for deterministic behavior across runs
     key = b"learning_scheduler_v1"

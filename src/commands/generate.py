@@ -3,7 +3,7 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn
 from rich.table import Table
 
-from scheduler.scheduler import generate_schedule
+from src.scheduler import generate_schedule
 
 console = Console()
 

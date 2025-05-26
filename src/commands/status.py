@@ -2,7 +2,7 @@ from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 
-from scheduler import scheduler
+from src import scheduler
 
 console = Console()
 

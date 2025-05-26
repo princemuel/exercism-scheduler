@@ -3,8 +3,10 @@ from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Set, Tuple
 
-from scheduler import db
-from scheduler.constants import (
+from rich.console import Console
+
+from src import db
+from src.constants import (
     CATEGORY_WEIGHT,
     COMPLETION_THRESHOLD,
     DAYS_FOR_TRACK_ROTATION,
@@ -14,7 +16,9 @@ from scheduler.constants import (
     RECENCY_WEIGHT,
     ROTATION_WEIGHT,
 )
-from scheduler.helpers import deterministic_k
+from src.helpers import deterministic_k
+
+console = Console()
 
 
 def get_all_tracks() -> List[Dict]:
@@ -257,7 +261,7 @@ def generate_schedule(
 
     extra_candidates.sort(key=sort_key)
 
-    for title, score, category in extra_candidates:
+    for title, _score, _category in extra_candidates:
         if len(extra) >= 2:
             break
 

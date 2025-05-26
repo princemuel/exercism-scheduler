@@ -1,6 +1,6 @@
 import sqlite3
 
-from scheduler.constants import DATABASE_PATH, SCHEMA_PATH
+from src.constants import DATABASE_PATH, SCHEMA_PATH
 
 
 def initialize():

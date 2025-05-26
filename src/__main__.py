@@ -1,6 +1,16 @@
 import typer
 
-from scheduler.commands import export, generate, init, log, populate, report, status
+from src.commands import (
+    export,
+    generate,
+    init,
+    log,
+    populate,
+    report,
+    status,
+    sync,
+    track,
+)
 
 app = typer.Typer(
     help="Enhanced Learning Track Scheduler with Bitcoin-style Determinism"
@@ -21,6 +31,15 @@ app.command()(log.log)
 app.command()(export.export)
 app.command()(report.report)
 app.command()(status.status)
+app.command()(sync.sync)
+
+app.add_typer(track.app, name="track", help="Track management commands")
+
+
+def main():
+    """Standalone entry point."""
+    app()
+
 
 if __name__ == "__main__":
-    app()
+    main()

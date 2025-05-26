@@ -5,7 +5,7 @@ import typer
 from platformdirs import user_downloads_dir
 from rich.console import Console
 
-from scheduler import db, utils
+from src import db, utils
 
 console = Console()
 
