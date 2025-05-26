@@ -18,10 +18,10 @@ DATABASE_URL = f"sqlite:///{DATABASE_PATH}"
 # Constants for the Scheduler
 # /////////////////////////////////////////////
 # Enhanced scoring weights (redistributed using exact decimal representations)
-PROGRESS_WEIGHT = Decimal("0.35")  # Slightly increased
-RECENCY_WEIGHT = Decimal("0.25")  # Increased importance
-ROTATION_WEIGHT = Decimal("0.25")  # Weekly rotation weight
-CATEGORY_WEIGHT = Decimal("0.15")  # Slightly reduced
+PROGRESS_WEIGHT = Decimal("0.35")
+RECENCY_WEIGHT = Decimal("0.25")
+ROTATION_WEIGHT = Decimal("0.15")
+CATEGORY_WEIGHT = Decimal("0.25")
 
 # Constants for algorithm tuning
 MAX_DAILY_TRACKS = 4

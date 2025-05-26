@@ -1,7 +1,7 @@
 import json
 from datetime import date, datetime, timedelta
 from decimal import Decimal
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 from scheduler import db
 from scheduler.constants import (
@@ -82,10 +82,16 @@ def get_track_last_appearance(track: str) -> int:
 
 
 def calculate_track_score(
-    track: Dict, history: Dict[str, int], today_str: str
+    track: Dict,
+    history: Dict[str, int],
+    today_str: str,
+    selected_categories: Optional[Set[str]] = None,
 ) -> Tuple[Decimal, Dict]:
     """Calculate comprehensive score for track selection."""
     title = track["title"]
+    category = track["category"]
+
+    selected_categories = selected_categories or set()
 
     # 1. Progress Score (inverse of completion ratio)
     completion_ratio = Decimal(track["completed"]) / Decimal(track["total"])
@@ -111,12 +117,18 @@ def calculate_track_score(
     k_value = deterministic_k(today_str, title)
     category_score = Decimal(k_value % 1000) / Decimal("1000")  # Normalize to 0-1
 
+    # 5. Category Diversity Bonus (boost for unused categories)
+    diversity_bonus = (
+        Decimal("0.5") if category not in selected_categories else Decimal("0")
+    )
+
     # Combine scores with weights
     total_score = (
         progress_score * PROGRESS_WEIGHT
         + recency_score * RECENCY_WEIGHT
         + rotation_score * ROTATION_WEIGHT
         + category_score * CATEGORY_WEIGHT
+        + diversity_bonus  # Flat bonus for category diversity
     )
 
     score_breakdown = {
@@ -124,6 +136,7 @@ def calculate_track_score(
         "recency": float(recency_score),
         "rotation": float(rotation_score),
         "category": float(category_score),
+        "diversity_bonus": float(diversity_bonus),
         "total": float(total_score),
         "completion_ratio": float(completion_ratio),
         "days_since_last": days_since,
@@ -161,46 +174,104 @@ def generate_schedule(
     tracks = get_all_tracks()
     history = get_recent_history()
 
-    # Calculate scores for all tracks
-    scored_tracks = []
-    score_details = {}
-
-    for track in tracks:
-        score, breakdown = calculate_track_score(track, history, today_str)
-        scored_tracks.append((track["title"], score))
-        score_details[track["title"]] = breakdown
-
-    # Sort by score (descending) then by deterministic hash for tie-breaking
-    def sort_key(item):
-        title, score = item
-        k_value = deterministic_k(today_str, title)
-        return (-score, k_value)  # Negative score for descending order
-
-    scored_tracks.sort(key=sort_key)
-
-    # Select tracks ensuring constraints
+    # Select tracks ensuring constraints with dynamic category diversity scoring
     core = []
     extra = []
     selected_categories = set()
 
-    for title, score in scored_tracks:
-        track = next(t for t in tracks if t["title"] == title)
+    # Iteratively select core tracks, recalculating scores with diversity bonus
+    while len(core) < MAX_DAILY_TRACKS:
+        # Calculate scores for remaining tracks
+        scored_tracks = []
+        score_details = {}
+
+        for track in tracks:
+            if track["title"] in core:  # Skip already selected
+                continue
+
+            score, breakdown = calculate_track_score(
+                track, history, today_str, selected_categories
+            )
+            scored_tracks.append((track["title"], score, track["category"]))
+            score_details[track["title"]] = breakdown
+
+        if not scored_tracks:  # No more eligible tracks
+            break
+
+        # Sort by score (descending) then by deterministic hash for tie-breaking
+        def sort_key(item):
+            title, score, _ = item  # category unused in sorting
+            k_value = deterministic_k(today_str, title)
+            return (-score, k_value)  # Negative score for descending order
+
+        scored_tracks.sort(key=sort_key)
+
+        # Select the best track
+        best_track = None
+        for title, score, category in scored_tracks:
+            # Skip if already completed
+            if score_details[title]["completion_ratio"] >= float(COMPLETION_THRESHOLD):
+                continue
+
+            # Skip if maxed out appearances this week
+            if score_details[title]["recent_appearances"] >= MAX_APPEARANCES_PER_WEEK:
+                continue
+
+            best_track = (title, score, category)
+            break
+
+        if best_track is None:  # No eligible tracks found
+            break
+
+        title, score, category = best_track
+        core.append(title)
+        selected_categories.add(category)
+
+    # Calculate final scores for all tracks (for extras and final score_details)
+    final_score_details = {}
+    extra_candidates = []
+
+    for track in tracks:
+        if track["title"] in core:  # Skip core tracks
+            continue
+
+        score, breakdown = calculate_track_score(
+            track, history, today_str, selected_categories
+        )
+        extra_candidates.append((track["title"], score, track["category"]))
+        final_score_details[track["title"]] = breakdown
+
+    # Add core track scores to final details
+    for track in tracks:
+        if track["title"] in core:
+            score, breakdown = calculate_track_score(
+                track, history, today_str, set()
+            )  # Original scoring
+            final_score_details[track["title"]] = breakdown
+
+    # Sort extra candidates and select top 2
+    def sort_key(item):
+        title, score, _ = item
+        k_value = deterministic_k(today_str, title)
+        return (-score, k_value)
+
+    extra_candidates.sort(key=sort_key)
+
+    for title, score, category in extra_candidates:
+        if len(extra) >= 2:
+            break
 
         # Skip if already completed
-        if score_details[title]["completion_ratio"] >= float(COMPLETION_THRESHOLD):
+        if final_score_details[title]["completion_ratio"] >= float(
+            COMPLETION_THRESHOLD
+        ):
             continue
 
         # Skip if maxed out appearances this week
-        if score_details[title]["recent_appearances"] >= MAX_APPEARANCES_PER_WEEK:
+        if final_score_details[title]["recent_appearances"] >= MAX_APPEARANCES_PER_WEEK:
             continue
 
-        if len(core) < MAX_DAILY_TRACKS:
-            core.append(title)
-            selected_categories.add(track["category"])
-        elif len(extra) < 2:  # Extra tracks
-            # Prefer different categories for diversity
-            if track["category"] not in selected_categories or len(extra) == 0:
-                extra.append(title)
+        extra.append(title)
 
     # Store in database
     conn = db.connect()
@@ -210,4 +281,4 @@ def generate_schedule(
             (today_str, json.dumps(core), json.dumps(extra)),
         )
 
-    return core, extra, score_details
+    return core, extra, final_score_details
