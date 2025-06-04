@@ -1,175 +1,36 @@
-[build-system]
-    requires      = ["hatchling"]
-    build-backend = "hatchling.build"
-
 [project]
     name = "scheduler"
-    # dynamic = ["version"]
-    version = "0.1.1"
-    description = "A command-line application to track and manage learning progress on Exercism"
+    version = "2025.06.04"
+    description = "Command-line scheduler tool for tracking and managing learning progress on Exercism"
     readme = "README.md"
-    license = "MIT"
-    requires-python = ">=3.8"
+    license-files = ["LICEN[CS]E*"]
     authors = [
         { name = "Prince Muel", email = "68931805+princemuel@users.noreply.github.com" },
     ]
     keywords = ["scheduler", "tracker", "learning", "progress"]
     classifiers = [
-        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
     ]
-    dependencies = ["typer>=0.13", "rich>=14.0", "platformdirs"]
-
+    requires-python = ">=3.13"
+    dependencies = ["platformdirs>=4.3.8", "rich>=14.0.0", "typer>=0.16.0"]
     [project.optional-dependencies]
-        dev  = ["pytest>=7.0", "pytest-cov", "ruff", "mypy"]  # Removed black, kept ruff
+        dev = ["pytest>=7.0", "pytest-cov", "ruff", "mypy"]
         test = ["pytest>=7.0", "pytest-cov"]
-
     [project.urls]
-        Homepage      = "https://github.com/princemuel/exercism-scheduler"
+        Homepage = "https://github.com/princemuel/exercism-scheduler"
         Documentation = "https://github.com/princemuel/exercism-scheduler#readme"
-        Repository    = "https://github.com/princemuel/exercism-scheduler.git"  # Fixed .git extension
+        Repository = "https://github.com/princemuel/exercism-scheduler.git"
         "Bug Tracker" = "https://github.com/princemuel/exercism-scheduler/issues"
-
     [project.scripts]
-        scheduler = "src.__main__:app"
-        # scheduler = "src.cli:app"
-        # Alternative individual commands (optional)
-        # scheduler-populate     = "src.commands.populate:main"
-        # scheduler-update-track = "src.commands.update_track:main"
-        # scheduler-sync         = "src.commands.sync_tracks:main"
-
-        # [tool.hatch.version]
-        #     path = "src/__init__.py"  # Updated path to match src structure
-
-[tool.hatch.build.targets.wheel]
-    packages = ["src"]
-
-[tool.hatch.build.targets.sdist]
-    include = ["/src", "/README.md", "/LICENSE"]
-    exclude = ["/.git", "/.pytest_cache", "/__pycache__", "*.pyc", "*.pyo"]
-
-# Development environment configuration
-[tool.hatch.envs.default]
-    dependencies = ["pytest>=7.0", "pytest-cov", "ruff", "mypy"]  # Removed black
-
-    [tool.hatch.envs.default.scripts]
-        test         = "pytest {args:.}"
-        test-cov     = "pytest --cov=src {args:.}"
-        lint         = "ruff check {args:.}"
-        lint-fix     = "ruff check --fix {args:.}"
-        format       = "ruff format {args:src}"              # Changed to ruff format
-        format-check = "ruff format --check {args:src}"      # Changed to ruff format
-        type-check   = "mypy {args:src}"
-        all          = ["format", "lint-fix", "type-check", "test-cov"]
-
-# Testing environment
-[tool.hatch.envs.test]
-    dependencies = ["pytest>=7.0", "pytest-cov"]
-
-    [[tool.hatch.envs.test.matrix]]
-        python = ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
-
-    [tool.hatch.envs.test.scripts]
-        run     = "pytest {args:tests}"
-        run-cov = "pytest --cov=src --cov-report=term-missing {args:tests}"
-
-# Ruff configuration - both linting and formatting
-[tool.ruff]
-    target-version = "py38"
-    line-length = 88
-
-    [tool.ruff.lint]
-        select = [
-            "E",   # pycodestyle errors
-            "W",   # pycodestyle warnings
-            "F",   # pyflakes
-            "I",   # isort
-            "B",   # flake8-bugbear
-            "C4",  # flake8-comprehensions
-            "UP",  # pyupgrade
-            "N",   # pep8-naming
-            "S",   # flake8-bandit (security)
-            "T20", # flake8-print
-            "SIM", # flake8-simplify
-            "RUF", # Ruff-specific rules
-        ]
-        ignore = [
-            "E501",  # line too long, handled by formatter
-            "B008",  # do not perform function calls in argument defaults
-            "C901",  # too complex
-            "S101",  # use of assert detected (allow in tests)
-            "T201",  # print found (allow for CLI apps)
-            "T203",  # pprint found
-        ]
-
-        [tool.ruff.lint.per-file-ignores]
-            "__init__.py" = ["F401"]
-            "tests/*" = ["S101", "S106", "S108"]  # Allow asserts and hardcoded passwords in tests
-
-        [tool.ruff.lint.isort]
-            known-first-party = ["src"]
-            split-on-trailing-comma = true
-
-    [tool.ruff.format]
-        # Use single quotes for strings
-        quote-style = "double"
-        # Use spaces around the assignment operator for annotated assignments
-        indent-style = "space"
-        # Respect magic trailing commas
-        skip-magic-trailing-comma = false
-        # Automatically detect line ending
-        line-ending = "auto"
-
-# Remove black configuration since we're using ruff format now
-
-[tool.mypy]
-    python_version              = "3.8"
-    warn_return_any             = true
-    warn_unused_configs         = true
-    disallow_untyped_defs       = true
-    disallow_incomplete_defs    = true
-    check_untyped_defs          = true
-    disallow_untyped_decorators = true
-    no_implicit_optional        = true
-    warn_redundant_casts        = true
-    warn_unused_ignores         = true
-    warn_no_return              = true
-    warn_unreachable            = true
-    strict_equality             = true
-
-    [[tool.mypy.overrides]]
-        module                = "tests.*"
-        disallow_untyped_defs = false
-
-[tool.pytest.ini_options]
-    testpaths = ["tests"]
-    python_files = ["test_*.py", "*_test.py"]
-    python_classes = ["Test*"]
-    python_functions = ["test_*"]
-    addopts = ["--strict-markers", "--strict-config", "--verbose"]
-    markers = [
-        "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-        "integration: marks tests as integration tests",
-    ]
-
-[tool.coverage.run]
-    source = ["src"]
-    omit   = ["*/tests/*", "*/test_*"]
-
-[tool.coverage.report]
-    exclude_lines = [
-        "pragma: no cover",
-        "def __repr__",
-        "raise AssertionError",
-        "raise NotImplementedError",
-        "if __name__ == .__main__.:",
-        "if TYPE_CHECKING:",
-    ]
+        scheduler = "scheduler:main"
+[build-system]
+    requires = ["hatchling"]
+    build-backend = "hatchling.build"
