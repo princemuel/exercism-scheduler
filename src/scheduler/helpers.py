@@ -1,6 +1,6 @@
 import hashlib
 
-from src.constants import RANDOM_SEED_MOD
+from scheduler.constants import RANDOM_SEED_MOD
 
 
 def deterministic_k(date_str: str, track: str) -> int:

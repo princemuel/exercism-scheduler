@@ -3,7 +3,7 @@ import json
 from rich.console import Console
 from rich.table import Table
 
-from src import db, utils
+from scheduler import db, utils
 
 console = Console()
 

@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from rich.console import Console
 
-from src import db
+from scheduler import db
 
 console = Console()
 

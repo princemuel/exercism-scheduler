@@ -1,6 +1,6 @@
 import typer
 
-from src.commands import (
+from scheduler.commands import (
     export,
     generate,
     init,
@@ -36,10 +36,6 @@ app.command()(sync.sync)
 app.add_typer(track.app, name="track", help="Track management commands")
 
 
-def main():
+def main() -> None:
     """Standalone entry point."""
     app()
-
-
-if __name__ == "__main__":
-    main()

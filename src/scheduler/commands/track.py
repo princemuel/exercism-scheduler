@@ -3,8 +3,8 @@ from typing import Optional
 import typer
 from rich.console import Console
 
-from src import db
-from src.models.track import Track
+from scheduler import db
+from scheduler.models.track import Track
 
 app = typer.Typer()
 

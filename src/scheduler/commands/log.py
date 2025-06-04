@@ -3,7 +3,7 @@ from datetime import date
 import typer
 from rich.console import Console
 
-from src import db
+from scheduler import db
 
 console = Console()
 

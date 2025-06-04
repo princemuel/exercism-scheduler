@@ -4,7 +4,7 @@ from typing import Optional
 import typer
 from rich.console import Console
 
-from src.models.track import Track
+from scheduler.models.track import Track
 
 console = Console()
 

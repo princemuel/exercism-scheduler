@@ -6,7 +6,7 @@ from platformdirs import user_documents_dir
 
 # /////////////////////////////////////////////
 if os.getenv("MODE", "").lower() == "development":
-    DATA_DIR = Path.cwd() / "src" / "database"
+    DATA_DIR = Path.cwd() / "src" / "scheduler" / "database"
 else:
     DATA_DIR = Path(user_documents_dir()) / "scheduler"
 

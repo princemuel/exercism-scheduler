@@ -5,8 +5,8 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from rich.console import Console
 
-from src import db
-from src.constants import (
+from scheduler import db
+from scheduler.constants import (
     CATEGORY_WEIGHT,
     COMPLETION_THRESHOLD,
     DAYS_FOR_TRACK_ROTATION,
@@ -16,7 +16,7 @@ from src.constants import (
     RECENCY_WEIGHT,
     ROTATION_WEIGHT,
 )
-from src.helpers import deterministic_k
+from scheduler.helpers import deterministic_k
 
 console = Console()
 
