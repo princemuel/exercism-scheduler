@@ -29,12 +29,12 @@ ROTATION_WEIGHT = Decimal("0.15")
 CATEGORY_WEIGHT = Decimal("0.25")
 
 # Constants for algorithm tuning
-MAX_DAILY_TRACKS = 4
+MAX_DAILY_TRACKS = 3
 DAYS_FOR_TRACK_ROTATION = 7  # Days to consider for track rotation history
 COMPLETION_THRESHOLD = Decimal("0.96")  # Consider a track completed at 96% completion
 
 # Weekly coverage constraints
-MIN_APPEARANCES_PER_WEEK = 2
+MIN_APPEARANCES_PER_WEEK = 1
 MAX_APPEARANCES_PER_WEEK = 4
 BITCOIN_STYLE_SELECTION = True
 

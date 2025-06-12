@@ -1,6 +1,6 @@
 [project]
     name = "scheduler"
-    version = "2025.06.04"
+    version = "2025.06.12"
     description = "Command-line scheduler tool for tracking and managing learning progress on Exercism"
     readme = "README.md"
     license-files = ["LICEN[CS]E*"]
