@@ -32,6 +32,24 @@ def get_all_tracks() -> List[Dict]:
     conn.close()
     return tracks
 
+def get_active_tracks() -> List[Dict]:
+    """Get active track statistics from database."""
+    conn = db.connect()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT title, category, total, completed
+        FROM tracks
+        WHERE active = 1
+        ORDER BY title
+    """)
+    tracks = []
+    for row in cursor.fetchall():
+        tracks.append(
+            {"title": row[0], "category": row[1], "total": row[2], "completed": row[3]}
+        )
+    conn.close()
+    return tracks
+
 
 def get_recent_history(days: int = DAYS_FOR_TRACK_ROTATION) -> Dict[str, int]:
     """Get track appearance counts in recent days."""
@@ -170,7 +188,7 @@ def generate_schedule(
         conn.close()
 
     # Get all data needed for scoring
-    tracks = get_all_tracks()
+    tracks = get_active_tracks()
     history = get_recent_history()
 
     # Score all tracks once

@@ -55,8 +55,8 @@ def update(
 def list():
     """List all tracks."""
     conn = db.connect()
-    cursor = conn.cursor()
-    try:
+    with conn:
+        cursor = conn.cursor()
         cursor.execute(
             "SELECT title, category, total, completed FROM tracks ORDER BY title"
         )
@@ -66,14 +66,21 @@ def list():
             console.print("No tracks found", style="yellow")
             return
 
-        console.print("\n[bold]Tracks:[/bold]")
-        for title, category, total, completed in tracks:
+        console.print("\n[bold]TRACKS:[/bold]\n")
+        console.print(
+            "  [bold]{:<15} {:<15} {:>10} {:<10}[/bold]\n".format(
+                "Title",
+                "Category",
+                "Progress",
+                "Percentage",
+            )
+        )
+        for title, category, total, completed in tracks:  # type: ignore
             progress = f"{completed}/{total}"
-            percentage = f"({completed / total * 100:.1f}%)" if total > 0 else "(0%)"
-            console.print(f"  {title:<15} [{category}] {progress} {percentage}")
-
-    finally:
-        conn.close()
+            percentage = f"{completed / total * 100:.1f}%" if total > 0 else "0%"
+            console.print(
+                f"  {title:<15} {category:<15} {progress:>10} {percentage:>10}"
+            )
 
 
 @app.command("show")

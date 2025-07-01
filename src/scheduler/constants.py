@@ -29,7 +29,7 @@ ROTATION_WEIGHT = Decimal("0.15")
 CATEGORY_WEIGHT = Decimal("0.25")
 
 # Constants for algorithm tuning
-MAX_DAILY_TRACKS = 3
+MAX_DAILY_TRACKS = 4
 DAYS_FOR_TRACK_ROTATION = 7  # Days to consider for track rotation history
 COMPLETION_THRESHOLD = Decimal("0.96")  # Consider a track completed at 96% completion
 
