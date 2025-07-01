@@ -6,10 +6,16 @@ from typing import Dict, List, Optional, Set, Tuple
 from rich.console import Console
 
 from scheduler import db
-from scheduler.constants import (CATEGORY_WEIGHT, COMPLETION_THRESHOLD,
-                                 DAYS_FOR_TRACK_ROTATION, MAX_APPEARANCES_PER_WEEK,
-                                 MAX_DAILY_TRACKS, PROGRESS_WEIGHT, RECENCY_WEIGHT,
-                                 ROTATION_WEIGHT)
+from scheduler.constants import (
+    CATEGORY_WEIGHT,
+    COMPLETION_THRESHOLD,
+    DAYS_FOR_TRACK_ROTATION,
+    MAX_APPEARANCES_PER_WEEK,
+    MAX_DAILY_TRACKS,
+    PROGRESS_WEIGHT,
+    RECENCY_WEIGHT,
+    ROTATION_WEIGHT,
+)
 from scheduler.helpers import deterministic_k
 
 console = Console()
@@ -31,6 +37,7 @@ def get_all_tracks() -> List[Dict]:
         )
     conn.close()
     return tracks
+
 
 def get_active_tracks() -> List[Dict]:
     """Get active track statistics from database."""
@@ -162,7 +169,6 @@ def calculate_track_score(
     return total_score, score_breakdown
 
 
-
 def generate_schedule(
     target_date: Optional[date] = None, force: bool = False
 ) -> Tuple[List[str], List[str], Dict]:
@@ -206,8 +212,9 @@ def generate_schedule(
 
     for track in tracks:
         # Treat frequently appearing categories as "overused" for diversity scoring
-        overused_categories = {cat for cat, count in category_counts.items()
-                             if count >= 2}  # Adjust threshold as needed
+        overused_categories = {
+            cat for cat, count in category_counts.items() if count >= 2
+        }  # Adjust threshold as needed
 
         score, breakdown = calculate_track_score(
             track, history, today_str, overused_categories
@@ -237,7 +244,9 @@ def generate_schedule(
         eligible_tracks.append(title)
 
     # Split tracks by ratio - core gets the majority, extra gets the rest
-    total_tracks = min(len(eligible_tracks), MAX_DAILY_TRACKS + 2)  # Assuming 2 extra slots
+    total_tracks = min(
+        len(eligible_tracks), MAX_DAILY_TRACKS + 2
+    )  # Assuming 2 extra slots
     core_count = min(MAX_DAILY_TRACKS, total_tracks)
 
     # Split the eligible tracks

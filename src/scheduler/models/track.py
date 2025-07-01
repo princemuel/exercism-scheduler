@@ -16,6 +16,7 @@ class Track:
     category: str
     total: int
     completed: int = 0
+    active: int = 0
 
     def save(self):
         """Save or update this track in the database."""
@@ -23,8 +24,8 @@ class Track:
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "INSERT OR REPLACE INTO tracks (title, category, total, completed) VALUES (?, ?, ?, ?)",
-                (self.title, self.category, self.total, self.completed),
+                "INSERT OR REPLACE INTO tracks (title, category, total, completed, active) VALUES (?, ?, ?, ?)",
+                (self.title, self.category, self.total, self.completed, self.active),
             )
             conn.commit()
         finally:
@@ -51,7 +52,7 @@ class Track:
         cursor = conn.cursor()
         try:
             cursor.execute(
-                "SELECT title, category, total, completed FROM tracks WHERE title = ?",
+                "SELECT title, category, total, completed, active FROM tracks WHERE title = ?",
                 (title,),
             )
             row = cursor.fetchone()

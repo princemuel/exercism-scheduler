@@ -18,9 +18,7 @@ def report():
     # Get scheduled tracks for the week
     cursor.execute(
         """
-        SELECT date, core, extra
-        FROM schedule
-        WHERE date BETWEEN ? AND ?
+        SELECT date, core, extra FROM schedule WHERE date BETWEEN ? AND ?
         ORDER BY date
     """,
         (start_date, end_date),
@@ -31,9 +29,7 @@ def report():
     # Get progress for the week
     cursor.execute(
         """
-        SELECT date, track, completed, pending
-        FROM logs
-        WHERE date BETWEEN ? AND ?
+        SELECT date, track, status FROM logs WHERE date BETWEEN ? AND ?
         ORDER BY date, track
     """,
         (start_date, end_date),
@@ -47,7 +43,7 @@ def report():
     # Schedule overview
     schedule_table = Table(title="📅 Weekly Schedule", show_header=True)
     schedule_table.add_column("Date", style="cyan")
-    schedule_table.add_column("Core Tracks", style="yellow")
+    schedule_table.add_column("Core Tracks", style="yellow", justify="center")
     schedule_table.add_column("Extra", style="green")
 
     for row in weekly_schedule:
@@ -66,14 +62,13 @@ def report():
     # Progress summary
     if weekly_progress:
         progress_table = Table(title="✅ Weekly Progress", show_header=True)
-        progress_table.add_column("Date", style="cyan")
+        progress_table.add_column("Date", style="blue")
         progress_table.add_column("Track", style="yellow")
-        progress_table.add_column("Completed", justify="center")
-        progress_table.add_column("Status", style="green")
+        progress_table.add_column("Status", style="white")
 
         for row in weekly_progress:
-            status = "📤 Carried" if row[3] else "✅ Done"
-            progress_table.add_row(row[0], row[1], str(row[2]), status)
+            status = str(row[2]).replace("_", " ").title()
+            progress_table.add_row(row[0], row[1], status)
 
         console.print(progress_table)
     else:
