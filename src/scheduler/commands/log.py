@@ -69,7 +69,7 @@ def log(
                     )
                 elif status == "completed":
                     console.print(
-                        f"📝 Updated {track}: ✅ completed ({exercises} exercises)",
+                        f"📝 Updated {track}: ✅ completed ({exercises} exercise(s))",
                         style="green",
                     )
                 elif status == "in_progress":
@@ -80,7 +80,7 @@ def log(
             else:
                 # New entry, safe to insert and increment
                 conn.execute(
-                    "INSERT INTO logs (date, track, status) VALUES (?, ?, ?, ?)",
+                    "INSERT INTO logs (date, track, status) VALUES (?, ?, ?)",
                     (today_str, track, status),
                 )
 
@@ -99,7 +99,7 @@ def log(
                     )
                 elif status == "completed":
                     console.print(
-                        f"📝 Logged {track}: ✅ completed ({exercises} exercises)",
+                        f"📝 Logged {track}: ✅ completed ({exercises} exercise(s))",
                         style="green",
                     )
                 elif status == "in_progress":

@@ -35,7 +35,8 @@ def status():
     # Display summary
     summary_panel = Panel(
         f"📊 Total Progress: {completed_exercises}/{total_exercises} ({overall_progress:.1f}%)\n"
-        f"📚 Active Tracks: {len(tracks)}\n"
+        f"📚 Total Tracks: {len(tracks)}\n"
+        f"📚 Active Tracks: {len([t for t in tracks if t['active']])}\n"  # type: ignore
         f"🎯 Categories: {len(categories)}",
         title="Learning Overview",
         title_align="left",
@@ -46,11 +47,11 @@ def status():
     cat_table = Table(
         title="📋 Progress by Category", show_header=True, header_style="bold green"
     )
-    cat_table.add_column("Category", style="cyan")
+    cat_table.add_column("Category", style="blue")
     cat_table.add_column("Tracks", justify="center")
-    cat_table.add_column("Progress", justify="center")
+    cat_table.add_column("Progress", justify="center", style="yellow")
     cat_table.add_column("Progress Bar", justify="left")
-    cat_table.add_column("Completion %", justify="center")
+    cat_table.add_column("Completion %", justify="center", style="white")
 
     for cat, data in sorted(categories.items()):
         completion_pct = (

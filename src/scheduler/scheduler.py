@@ -26,14 +26,20 @@ def get_all_tracks() -> List[Dict]:
     conn = db.connect()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT title, category, total, completed
+        SELECT title, category, total, completed, active
         FROM tracks
         ORDER BY title
     """)
     tracks = []
     for row in cursor.fetchall():
         tracks.append(
-            {"title": row[0], "category": row[1], "total": row[2], "completed": row[3]}
+            {
+                "title": row[0],
+                "category": row[1],
+                "total": row[2],
+                "completed": row[3],
+                "active": row[4],
+            }
         )
     conn.close()
     return tracks
@@ -44,7 +50,7 @@ def get_active_tracks() -> List[Dict]:
     conn = db.connect()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT title, category, total, completed
+        SELECT title, category, total, completed, active
         FROM tracks
         WHERE active = 1
         ORDER BY title
